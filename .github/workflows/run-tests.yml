@@ -1,0 +1,39 @@
+name: Run Tests
+on: [push, workflow_dispatch]
+jobs:
+  phpunit:
+    runs-on: ubuntu-22.04
+    env:
+      TEST_DB_CONNECTION: pgsql
+      TEST_DB_USERNAME: test
+      TEST_DB_PASSWORD: password
+      TEST_DB_DATABASE: test
+      TEST_DB_HOST: 127.0.0.1
+      TEST_DB_PORT: 5432
+    steps:
+      - name: Setup Postgres
+        run: |
+          sudo systemctl start postgresql.service
+          sudo -u postgres psql -c "CREATE USER $TEST_DB_USERNAME WITH PASSWORD '$TEST_DB_PASSWORD'"
+          sudo -u postgres psql -c "CREATE DATABASE $TEST_DB_DATABASE WITH OWNER = $TEST_DB_USERNAME"
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ./src/vendor
+          key: composer-deps-${{ hashFiles('./backend/src/composer.lock') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: ./src
+        run: composer install
+      - name: Create dummy .env
+        working-directory: ./src
+        run: echo "APP_KEY=" > .env
+      - name: Generate dummy APP_KEY
+        working-directory: ./src
+        run: php artisan key:generate
+      - name: Run PHPUnit
+        working-directory: ./src
+        run: php artisan test

@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: './.docker/php'
+    container_name: php
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+      - ./.docker/php/.logs/php_errors.log:/var/log/php/php_errors.log
+      - ./.docker/php/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/xdebug/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - laravel
+
+  nginx:
+    build:
+      context: './.docker/nginx'
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./.docker/nginx/.logs:/var/log/nginx
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./src:/var/www/html
+    networks:
+      - laravel
+
+  postgres:
+    image: postgres:14.1
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - laravel
+
+  test_db:
+    image: postgres:14.1
+    container_name: test_db
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test
+    volumes:
+      - test_db_data:/var/lib/postgresql/data
+    networks:
+      - laravel
+
+  memcached:
+    image: memcached:1.6.15-alpine
+    container_name: memcached
+    restart: unless-stopped
+    command: memcached -m 64
+    ports:
+      - 11211:11211
+    networks:
+      - laravel
+
+  installer:
+    profiles: ['installer']
+    build:
+      context: ./.docker/laravel-installer/
+      dockerfile: Dockerfile
+    container_name: installer
+    volumes:
+      - ./:/app/laravel
+
+  artisan:
+    profiles: ['artisan']
+    build:
+      context: ./.docker/laravel-installer/artisan/
+      dockerfile: Dockerfile
+    container_name: artisan
+    volumes:
+      - ./:/app/laravel
+    networks:
+      - laravel
+
+  composer:
+    profiles: ['composer']
+    build:
+      context: ./.docker/composer/
+      dockerfile: Dockerfile
+    container_name: composer
+    volumes:
+      - ./:/app/laravel
+    networks:
+      - laravel
+
+  npm:
+    profiles: ['npm']
+    build:
+      context: ./.docker/npm/
+      dockerfile: Dockerfile
+    container_name: npm
+    volumes:
+      - ./:/app/laravel
+    networks:
+      - laravel
+
+  phpunit:
+    profiles: ['phpunit']
+    build:
+      context: ./.docker/phpunit/
+      dockerfile: Dockerfile
+    container_name: phpunit
+    volumes:
+      - ./:/app/laravel
+    networks:
+      - laravel
+
+volumes:
+  db_data: {}
+  test_db_data: {}
+
+networks:
+  laravel:
+    driver: bridge
