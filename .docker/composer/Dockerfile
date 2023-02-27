@@ -3,7 +3,6 @@ FROM composer:2.2.5 AS composer
 FROM php:8.1-fpm-alpine3.15
 COPY --from=composer /usr/bin/composer /usr/bin/composer 
 
-
 # Install PHP Extensions (igbinary & memcached)
 RUN apk add --no-cache --update libmemcached-libs zlib
 RUN set -xe && \
@@ -32,6 +31,9 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
   && docker-php-ext-install \
   pcntl
 
+RUN apk add --update libpq-dev \
+  && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+  && docker-php-ext-install pdo pdo_pgsql pgsql
 
 WORKDIR /app/laravel/src
 
