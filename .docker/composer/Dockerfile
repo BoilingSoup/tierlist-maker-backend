@@ -35,6 +35,9 @@ RUN apk add --update libpq-dev \
   && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
   && docker-php-ext-install pdo pdo_pgsql pgsql
 
-WORKDIR /app/laravel/src
+WORKDIR /entrypoint
+COPY entrypoint.sh /entrypoint
+RUN chmod +x /entrypoint/entrypoint.sh
 
-ENTRYPOINT ["/usr/bin/composer"]
+WORKDIR /app/laravel/src
+ENTRYPOINT ["/entrypoint/entrypoint.sh"]
