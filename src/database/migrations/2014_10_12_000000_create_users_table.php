@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password', MaxLength::USERS_PASSWORD);
             $table->boolean('is_admin')->default(false);
             $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

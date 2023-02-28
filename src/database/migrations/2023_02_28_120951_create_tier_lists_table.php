@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title', MaxLength::TIER_LISTS_TITLE);
             $table->json('data');
             $table->text('description')->nullable();
-            $table->boolean('public')->default(false)->index();
+            $table->boolean('is_public')->default(false)->index();
             $table->timestamps();
 
             $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
