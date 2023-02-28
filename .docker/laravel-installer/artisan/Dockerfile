@@ -53,6 +53,7 @@ RUN EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig"
 RUN php composer-setup.php --quiet
 RUN rm composer-setup.php
 RUN mv composer.phar /usr/bin/composer
+RUN apk add --update --no-cache less
 
 
 WORKDIR /app/laravel/src
