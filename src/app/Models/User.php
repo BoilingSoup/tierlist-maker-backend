@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,6 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    const FOREIGN_KEY = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -23,4 +25,9 @@ class User extends Authenticatable
         'password',
         'is_admin'
     ];
+
+    public function tier_lists(): HasMany
+    {
+        return $this->hasMany(TierList::class);
+    }
 }

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('tier_lists', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('email')->unique();
-            $table->string('username', 20)->unique();
-            $table->string('password');
-            $table->boolean('is_admin');
+            $table->string('title', 40);
+            $table->json('data');
+            $table->text('description')->nullable();
             $table->timestamps();
+
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tier_lists');
     }
 };
