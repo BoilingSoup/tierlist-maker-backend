@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TierList;
 use App\Models\User;
 use Database\Helpers\MaxLength;
 use Illuminate\Database\Migrations\Migration;
@@ -13,15 +14,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create(User::TABLE, function (Blueprint $table) {
+        Schema::create(TierList::TABLE, function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('email', MaxLength::USERS_EMAIL)->unique();
-            $table->string('username', MaxLength::USERS_USERNAME)->unique();
-            $table->string('password', MaxLength::USERS_PASSWORD);
-            $table->boolean('is_admin')->default(false);
-            $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken();
+            $table->string('title', MaxLength::TIER_LISTS_TITLE);
+            $table->json('data');
+            $table->text('description')->nullable();
+            $table->boolean('is_public')->default(false)->index();
             $table->timestamps();
+
+            $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tier_lists');
     }
 };
