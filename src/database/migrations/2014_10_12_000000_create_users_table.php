@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email', MaxLength::USERS_EMAIL)->unique();
             $table->string('username', MaxLength::USERS_USERNAME)->unique();
             $table->string('password', MaxLength::USERS_PASSWORD);
-            $table->boolean('is_admin');
+            $table->boolean('is_admin')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
