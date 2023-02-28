@@ -14,6 +14,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
+    const TABLE = 'users';
+
     const FOREIGN_KEY = 'user_id';
 
     /**

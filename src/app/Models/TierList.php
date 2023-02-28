@@ -12,6 +12,8 @@ class TierList extends Model
 {
     use HasFactory, HasUuids;
 
+    const TABLE = 'tier_lists';
+
     const FOREIGN_KEY = 'tier_list_id';
 
     protected $fillable = [

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\TierList;
 use App\Models\User;
 use Database\Helpers\MaxLength;
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tier_lists', function (Blueprint $table) {
+        Schema::create(TierList::TABLE, function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title', MaxLength::TIER_LISTS_TITLE);
             $table->json('data');
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->boolean('public')->default(false)->index();
             $table->timestamps();
 
-            $table->foreignUuid(User::FOREIGN_KEY)->constrained()->cascadeOnDelete();
+            $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
         });
     }
 

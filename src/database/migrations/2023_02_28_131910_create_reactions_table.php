@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->comment('Maintians data about likes and dislikes of public tier lists.');
+            $table->uuid('id');
             $table->boolean('like');
             $table->boolean('dislike');
             $table->timestamps();
 
-            $table->foreignUuid(User::FOREIGN_KEY)->constrained()->cascadeOnDelete();
-            $table->foreignUuid(TierList::FOREIGN_KEY)->constrained()->cascadeOnDelete();
-            $table->primary([User::FOREIGN_KEY, Tierlist::FOREIGN_KEY]);
+            $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
+            $table->foreignUuid(TierList::FOREIGN_KEY)->references('id')->on(TierList::TABLE)->cascadeOnDelete();
+            $table->unique([User::FOREIGN_KEY, Tierlist::FOREIGN_KEY]);
         });
     }
 
