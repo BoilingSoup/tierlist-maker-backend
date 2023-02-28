@@ -25,7 +25,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'is_admin'
+        'is_admin',
     ];
 
     public function tier_lists(): HasMany
@@ -36,14 +36,14 @@ class User extends Authenticatable
     public function liked_tierlists(): BelongsToMany
     {
         return $this->belongsToMany(TierList::class, 'reactions', User::FOREIGN_KEY, TierList::FOREIGN_KEY)
-                    ->wherePivot('like', true)
-                    ->withTimestamps();
+          ->wherePivot('like', true)
+          ->withTimestamps();
     }
 
     public function disliked_tierlists(): BelongsToMany
     {
         return $this->belongsToMany(TierList::class, 'reactions', User::FOREIGN_KEY, TierList::FOREIGN_KEY)
-                    ->wherePivot('dislike', true)
-                    ->withTimestamps();
+          ->wherePivot('dislike', true)
+          ->withTimestamps();
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\TierList;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,9 +19,9 @@ return new class extends Migration
             $table->boolean('dislike');
             $table->timestamps();
 
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('tier_list_id')->constrained()->cascadeOnDelete();
-            $table->primary(['user_id', 'tier_list_id']);
+            $table->foreignUuid(User::FOREIGN_KEY)->constrained()->cascadeOnDelete();
+            $table->foreignUuid(TierList::FOREIGN_KEY)->constrained()->cascadeOnDelete();
+            $table->primary([User::FOREIGN_KEY, Tierlist::FOREIGN_KEY]);
         });
     }
 

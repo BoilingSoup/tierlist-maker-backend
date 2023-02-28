@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,13 +14,13 @@ return new class extends Migration
     {
         Schema::create('tier_lists', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('title', 40);
+            $table->string('title', MaxLength::TIER_LISTS_TITLE);
             $table->json('data');
             $table->text('description')->nullable();
             $table->boolean('public')->default(false)->index();
             $table->timestamps();
 
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid(User::FOREIGN_KEY)->constrained()->cascadeOnDelete();
         });
     }
 
