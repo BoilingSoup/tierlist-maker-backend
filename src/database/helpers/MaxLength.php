@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Helpers;
+
 class MaxLength
 {
     const USERS_EMAIL = 50;
