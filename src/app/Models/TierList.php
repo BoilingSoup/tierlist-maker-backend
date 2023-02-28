@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TierList extends Model
 {
@@ -22,5 +23,12 @@ class TierList extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, User::FOREIGN_KEY);
+    }
+
+    public function reactors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'reactions', TierList::FOREIGN_KEY, User::FOREIGN_KEY)
+                    ->withPivot(['like', 'dislike'])
+                    ->withTimestamps();
     }
 }
