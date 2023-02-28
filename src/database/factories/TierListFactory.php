@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TierList;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,7 +22,8 @@ class TierListFactory extends Factory
             // TODO Figure out how to generate JSON data
             'user_id' => User::factory(),
             'title' => fake()->words(3, asText: true),
-            'description' => fake()->sentences(2, asText: true)
+            'description' => fake()->sentences(2, asText: true),
+            'data' => '{}'
         ];
     }
 }

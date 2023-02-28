@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title', 40);
             $table->json('data');
             $table->text('description')->nullable();
+            $table->boolean('public')->default(false)->index();
             $table->timestamps();
 
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();

@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reactions', function (Blueprint $table) {
+            $table->comment('Maintians data about likes and dislikes of public tier lists.');
             $table->boolean('like');
             $table->boolean('dislike');
             $table->timestamps();
