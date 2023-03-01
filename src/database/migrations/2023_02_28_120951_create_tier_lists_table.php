@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Categories;
 use App\Models\TierList;
 use App\Models\User;
 use Database\Helpers\MaxLength;
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
+            $table->foreignUuid(Categories::FOREIGN_KEY)->references('id')->on(Categories::TABLE);
         });
     }
 

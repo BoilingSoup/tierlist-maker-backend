@@ -41,4 +41,9 @@ class TierList extends Model
           ->wherePivot('dislike', true)
           ->withTimestamps();
     }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Categories::class, Categories::TABLE);
+    }
 }
