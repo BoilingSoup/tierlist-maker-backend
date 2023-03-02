@@ -19,4 +19,14 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
     }
+
+    private function askToRefreshDB()
+    {
+        $refresh = $this->command->confirm(question: 'Refresh database?', default: false);
+
+        if ($refresh) {
+            $this->command->call('migrate:refresh');
+            $this->command->info('Database was refreshed');
+        }
+    }
 }
