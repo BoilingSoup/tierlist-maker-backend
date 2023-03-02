@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Categories;
 use App\Models\User;
+use Database\Helpers\ImageItemProvider;
+use Database\Helpers\JsonDataProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,12 +20,16 @@ class TierListFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = fake();
+        $faker->addProvider(new ImageItemProvider($faker));
+        $faker->addProvider(new JsonDataProvider($faker));
+
         return [
-            // TODO Figure out how to generate JSON data
-            'user_id' => User::factory(),
-            'title' => fake()->words(3, asText: true),
-            'description' => fake()->sentences(2, asText: true),
-            'data' => '{}',
+            User::FOREIGN_KEY => User::factory(),
+            Categories::FOREIGN_KEY => Categories::factory(),
+            'title' => $faker->words(3, asText: true),
+            'description' => $faker->sentences(2, asText: true),
+            'data' => json_encode($faker->tierListTiers()),
         ];
     }
 }

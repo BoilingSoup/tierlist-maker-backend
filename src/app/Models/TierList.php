@@ -19,8 +19,9 @@ class TierList extends Model
     protected $fillable = [
         'title',
         'data',
-        'user_id',
         'description',
+        User::FOREIGN_KEY,
+        Categories::FOREIGN_KEY,
     ];
 
     public function creator(): BelongsTo
@@ -31,19 +32,19 @@ class TierList extends Model
     public function liked_by(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'reactions', TierList::FOREIGN_KEY, User::FOREIGN_KEY)
-          ->wherePivot('like', true)
-          ->withTimestamps();
+            ->wherePivot('like', true)
+            ->withTimestamps();
     }
 
     public function disliked_by(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'reactions', TierList::FOREIGN_KEY, User::FOREIGN_KEY)
-          ->wherePivot('dislike', true)
-          ->withTimestamps();
+            ->wherePivot('dislike', true)
+            ->withTimestamps();
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Categories::class, Categories::TABLE);
+        return $this->belongsTo(Categories::class, Categories::FOREIGN_KEY);
     }
 }
