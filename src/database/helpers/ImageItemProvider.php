@@ -4,7 +4,7 @@ namespace Database\Helpers;
 
 class ImageItemProvider extends \Faker\Provider\Base
 {
-    public function tierListImages($nbImages = 2)
+    public function tierListImages(int $nbImages = 2)
     {
         $images = [];
 
