@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Categories;
 use App\Models\User;
 use Database\Helpers\ImageItemProvider;
 use Database\Helpers\JsonDataProvider;
@@ -24,7 +25,8 @@ class TierListFactory extends Factory
         $faker->addProvider(new JsonDataProvider($faker));
 
         return [
-            'user_id' => User::factory(),
+            User::FOREIGN_KEY => User::factory(),
+            Categories::FOREIGN_KEY => Categories::factory(),
             'title' => $faker->words(3, asText: true),
             'description' => $faker->sentences(2, asText: true),
             'data' => json_encode($faker->tierListTiers()),
