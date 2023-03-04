@@ -30,6 +30,7 @@ class TierListFactory extends Factory
             'title' => $faker->words(3, asText: true),
             'description' => $faker->sentences(2, asText: true),
             'data' => json_encode($faker->tierListTiers()),
+            'thumbnail' => $faker->imageUrl(),
         ];
     }
 }
