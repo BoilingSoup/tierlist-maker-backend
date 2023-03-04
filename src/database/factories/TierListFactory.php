@@ -32,6 +32,7 @@ class TierListFactory extends Factory
             'description' => $faker->sentences(2, asText: true),
             'data' => json_encode($faker->tierListTiers()),
             'thumbnail' => $faker->imageUrl(),
+            'is_public' => (bool) rand(0, 1),
             Model::CREATED_AT => $faker->dateTimeBetween(startDate: '-8 weeks', endDate: 'now'),
         ];
     }
