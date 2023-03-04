@@ -18,12 +18,15 @@ class TierListsSeeder extends Seeder
         $users = User::all();
         $categories = Categories::all();
 
-        // For each user, create a tier list, randomly selecting one
-        // of the available categories
+        // For each user, create a tier list, randomly set
+        // is_public field and a category
+
         $users->each(function (User $user) use ($categories) {
             $category = $categories->random();
+            $isPublic = (bool) rand(0, 1);
 
             TierList::factory()->create([
+                'is_public' => $isPublic,
                 User::FOREIGN_KEY => $user,
                 Categories::FOREIGN_KEY => $category,
             ]);
