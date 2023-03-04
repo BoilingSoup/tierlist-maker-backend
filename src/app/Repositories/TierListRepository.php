@@ -16,8 +16,8 @@ class TierListRepository
     {
         return Cache::tags([static::ALL_CACHE])->rememberForever(
             key: static::RECENT_CACHE,
-            // TODO: add a thumbnail column in tier_lists table, include that in select statement below.
-            callback: fn () => TierList::where('is_public', true)->select('title', 'description', User::FOREIGN_KEY)->with('creator:id,username')->take(5)->get()
+            // NOTE: maybe include category in the query... if so, this query can be condensed into new scopes.
+            callback: fn () => TierList::whereIsPublic()->select('title', 'description', 'thumbnail', User::FOREIGN_KEY)->with('creator:id,username')->take(5)->get()
         );
     }
 }

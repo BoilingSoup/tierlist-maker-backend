@@ -59,7 +59,7 @@ class TierListController extends Controller
      */
     public function recent()
     {
-        // TODO: probably should put this in a collection class.
+        // TODO: maybe put this in a Resource class.
         return $this->repository->recent();
     }
 }

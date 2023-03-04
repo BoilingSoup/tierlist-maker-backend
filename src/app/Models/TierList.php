@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,5 +47,10 @@ class TierList extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Categories::class, Categories::FOREIGN_KEY);
+    }
+
+    public function scopeWhereIsPublic(Builder $builder): Builder
+    {
+        return $builder->where('is_public', true);
     }
 }
