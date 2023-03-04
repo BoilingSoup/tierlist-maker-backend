@@ -32,15 +32,15 @@ class TierList extends Model
     public function liked_by(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'reactions', TierList::FOREIGN_KEY, User::FOREIGN_KEY)
-            ->wherePivot('like', true)
-            ->withTimestamps();
+          ->wherePivot('like', true)
+          ->withTimestamps();
     }
 
     public function disliked_by(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'reactions', TierList::FOREIGN_KEY, User::FOREIGN_KEY)
-            ->wherePivot('dislike', true)
-            ->withTimestamps();
+          ->wherePivot('dislike', true)
+          ->withTimestamps();
     }
 
     public function category(): BelongsTo
