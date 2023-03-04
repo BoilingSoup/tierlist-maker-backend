@@ -7,6 +7,7 @@ use App\Models\User;
 use Database\Helpers\ImageItemProvider;
 use Database\Helpers\JsonDataProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TierList>
@@ -31,6 +32,7 @@ class TierListFactory extends Factory
             'description' => $faker->sentences(2, asText: true),
             'data' => json_encode($faker->tierListTiers()),
             'thumbnail' => $faker->imageUrl(),
+            Model::CREATED_AT => $faker->dateTimeBetween(startDate: '-8 weeks', endDate: 'now'),
         ];
     }
 }

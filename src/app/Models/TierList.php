@@ -49,6 +49,11 @@ class TierList extends Model
         return $this->belongsTo(Categories::class, Categories::FOREIGN_KEY);
     }
 
+    public function scopeOrderByRecency(Builder $builder): Builder
+    {
+        return $builder->orderBy(Model::CREATED_AT, 'desc');
+    }
+
     public function scopeWhereIsPublic(Builder $builder): Builder
     {
         return $builder->where('is_public', true);
