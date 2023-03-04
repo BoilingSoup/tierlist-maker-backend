@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('title', MaxLength::TIER_LISTS_TITLE);
             $table->json('data');
             $table->text('description')->nullable();
+            $table->text('thumbnail');
             $table->boolean('is_public')->default(false)->index();
             $table->timestamps();
 
