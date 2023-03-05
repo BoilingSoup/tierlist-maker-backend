@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Helpers\Images\ImageHelper;
 use App\Models\Categories;
 use App\Models\User;
 use Database\Helpers\ImageItemProvider;
@@ -31,7 +32,7 @@ class TierListFactory extends Factory
             'title' => $faker->words(3, asText: true),
             'description' => $faker->sentences(2, asText: true),
             'data' => json_encode($faker->tierListTiers()),
-            'thumbnail' => $faker->imageUrl(),
+            'thumbnail' => $faker->imageUrl(ImageHelper::THUMBNAIL_WIDTH, ImageHelper::THUMBNAIL_HEIGHT),
             'is_public' => (bool) rand(0, 1),
             Model::CREATED_AT => $faker->dateTimeBetween(startDate: '-8 weeks', endDate: 'now'),
         ];
