@@ -12,11 +12,11 @@ class TierListTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_tier_list_recent_route_returns_5_most_recent_public_tier_lists(): void
+    public function test_tier_list_recent_route_returns_6_most_recent_public_tier_lists(): void
     {
         // Prepare data for test
         TierList::factory(10)->create();
-        $mostRecent = TierList::whereIsPublic()->orderByRecency()->take(5)->get();
+        $mostRecent = TierList::whereIsPublic()->orderByRecency()->take(6)->get();
 
         // Hit the route
         $response = $this->get(route('tierlist.recent'));
