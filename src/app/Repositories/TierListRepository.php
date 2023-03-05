@@ -17,7 +17,7 @@ class TierListRepository
     {
         return Cache::tags([static::ALL_CACHE])->rememberForever(
             key: static::RECENT_CACHE,
-            callback: fn () => TierList::select('title', 'description', 'thumbnail', Model::CREATED_AT, User::FOREIGN_KEY)
+            callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', Model::CREATED_AT, User::FOREIGN_KEY)
               ->whereIsPublic()
               ->orderByRecency()
               ->with('creator:id,username')
