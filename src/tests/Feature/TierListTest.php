@@ -25,6 +25,7 @@ class TierListTest extends TestCase
         // Assert json response contains at least these fields & in this structure
         $response->assertJsonStructure([
             '*' => [
+                'id',
                 'title',
                 'description',
                 'thumbnail',
@@ -40,10 +41,8 @@ class TierListTest extends TestCase
         $jsonResponse = json_decode($response->content());
 
         $mostRecent->each(function ($tierList, $index) use ($jsonResponse) {
-            // Assert that the response 'created_at' fields match the expected Models.
-            // I do some conversion with toArray(), so the date field is formatted in the same way as the API response.
-            // Used dd function to inspect the outputs and compare.
-            $this->assertEquals($tierList->toArray()[Model::CREATED_AT], $jsonResponse[$index]->created_at);
+            // Assert that the response IDs match the expected IDs & in the same order
+            $this->assertEquals($tierList->id, $jsonResponse[$index]->id);
         });
     }
 }
