@@ -21,7 +21,7 @@ class TierListRepository
               ->whereIsPublic()
               ->orderByRecency()
               ->with('creator:id,username')
-              ->take(5)
+              ->take(6)
               ->get()
         );
     }
