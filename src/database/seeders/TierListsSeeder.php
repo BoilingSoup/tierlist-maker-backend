@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Categories;
 use App\Models\TierList;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class TierListsSeeder extends Seeder
@@ -29,5 +30,18 @@ class TierListsSeeder extends Seeder
                 Categories::FOREIGN_KEY => $category,
             ]);
         });
+
+        $this->seedCarouselWithRealisticThumbnail();
+    }
+
+    private function seedCarouselWithRealisticThumbnail(): void
+    {
+        $url = 'https://i.imgur.com/UUNxrF4.png'; // image of tier list template 600x420
+
+        TierList::factory(6)->create([
+            'thumbnail' => $url,
+            'is_public' => true,
+            Model::CREATED_AT => fake()->dateTimeBetween(startDate: 'now', endDate: 'now'),
+        ]);
     }
 }
