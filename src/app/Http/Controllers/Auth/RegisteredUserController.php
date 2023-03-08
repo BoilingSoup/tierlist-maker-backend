@@ -22,7 +22,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): Response
     {
         $request->validate([
-            'username' => ['required', 'string', 'max:'.MaxLength::USERS_USERNAME],
+            'username' => ['required', 'string', 'min:4', 'max:'.MaxLength::USERS_USERNAME],
             'email' => ['required', 'string', 'email', 'max:'.MaxLength::USERS_EMAIL, 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
