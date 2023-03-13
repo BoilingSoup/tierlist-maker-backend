@@ -55,7 +55,7 @@ class TierListController extends Controller
     }
 
     /**
-     * Get the 6 most recent public tier lists to display on home page carousel.
+     * Get the 4 most recent public tier lists to display on home page carousel.
      */
     public function recent()
     {
