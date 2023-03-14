@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\TierList;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,7 +29,6 @@ class TierListTest extends TestCase
                 'description',
                 'thumbnail',
                 Model::CREATED_AT,
-                User::FOREIGN_KEY,
                 'creator' => [
                     'id',
                     'username',

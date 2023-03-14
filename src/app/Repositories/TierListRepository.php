@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\TierList;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -13,7 +14,7 @@ class TierListRepository
 
     const RECENT_CACHE = 'TLR_R';
 
-    public function recent()
+    public function recent(): Collection
     {
         return Cache::tags([static::ALL_CACHE])->rememberForever(
             key: static::RECENT_CACHE,
@@ -23,6 +24,7 @@ class TierListRepository
               ->with('creator:id,username')
               ->take(4)
               ->get()
+              ->makeHidden(User::FOREIGN_KEY)
         );
     }
 }
