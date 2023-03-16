@@ -20,9 +20,15 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('password')->nullable();
             $table->boolean('is_admin')->default(false);
+
             $table->string('github_id')->nullable();
             $table->string('github_token')->nullable();
             $table->string('github_refresh_token')->nullable();
+
+            $table->string('gitlab_id')->nullable();
+            $table->string('gitlab_token')->nullable();
+            $table->string('gitlab_refresh_token')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });
