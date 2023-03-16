@@ -18,18 +18,6 @@ class User extends Authenticatable
 
     const FOREIGN_KEY = 'user_id';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'username',
-        'email',
-        'password',
-        'is_admin',
-    ];
-
     public function tier_lists(): HasMany
     {
         return $this->hasMany(TierList::class);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\Routes\RouteHelper;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
-});
+RouteHelper::includeRouteFiles(__DIR__.'/auth');
 
-require __DIR__.'/auth.php';
+Route::get('/', function () {
+    $authStatus = Auth::check() ? 'Authenticated' : 'Unauthenticated';
+
+    if (config('app.env') === 'local') {
+        dump(Auth::user()?->getAttributes());
+    }
+
+    return '<h1>'.$authStatus.'</h1>';
+});
