@@ -4,7 +4,7 @@ namespace Database\Helpers;
 
 class MaxLength
 {
-    const USERS_EMAIL = 50;
+    const USERS_EMAIL = 320;
 
     const USERS_USERNAME = 25;
 
