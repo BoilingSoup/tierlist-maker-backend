@@ -16,7 +16,7 @@ Route::get('/github/callback', function () {
         $user = User::updateOrCreate(
             ['github_id' => $githubUser->id],
             [
-                'username' => $githubUser->nickname ?? $githubUser->name,
+                'username' => $githubUser->nickname ?? $githubUser->name, // TODO: make uuid if both are null
                 'email' => $githubUser->email,
                 'email_verified_at' => date('Y-m-d H:i:s'),
                 'github_token' => $githubUser->token,
