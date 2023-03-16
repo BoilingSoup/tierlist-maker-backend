@@ -33,4 +33,5 @@ return [
         realpath(storage_path('framework/views'))
     ),
 
+    'frontendUrl' => env('FRONTEND_URL'),
 ];

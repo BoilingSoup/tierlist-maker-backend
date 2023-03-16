@@ -17,14 +17,6 @@ class TierList extends Model
 
     const FOREIGN_KEY = 'tier_list_id';
 
-    protected $fillable = [
-        'title',
-        'data',
-        'description',
-        User::FOREIGN_KEY,
-        Categories::FOREIGN_KEY,
-    ];
-
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, User::FOREIGN_KEY);

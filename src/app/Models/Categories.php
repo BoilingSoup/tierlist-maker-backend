@@ -15,10 +15,6 @@ class Categories extends Model
 
     const FOREIGN_KEY = 'categories_id';
 
-    protected $fillable = [
-        'name',
-    ];
-
     public function tier_lists(): HasMany
     {
         return $this->hasMany(TierList::class, Categories::FOREIGN_KEY);

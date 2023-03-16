@@ -15,11 +15,14 @@ return new class extends Migration
     {
         Schema::create(User::TABLE, function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('email', MaxLength::USERS_EMAIL)->unique();
-            $table->string('username', MaxLength::USERS_USERNAME)->unique();
-            $table->string('password', MaxLength::USERS_PASSWORD);
-            $table->boolean('is_admin')->default(false);
+            $table->string('email', MaxLength::USERS_EMAIL);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('username')->unique();
+            $table->string('password')->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->string('github_id')->nullable();
+            $table->string('github_token')->nullable();
+            $table->string('github_refresh_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
