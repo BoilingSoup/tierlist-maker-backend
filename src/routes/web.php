@@ -24,5 +24,5 @@ Route::get('/', function () {
         dump(Auth::user()?->getAttributes());
     }
 
-    return '<h1>'.$authStatus.'</h1>';
+    return "<h1>{$authStatus}</h1>";
 });

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
-});
+})->name('user');
 
 Route::prefix('v1')->group(function () {
     RouteHelper::includeRouteFiles(__DIR__.'/api/v1');
