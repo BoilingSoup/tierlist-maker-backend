@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create(User::TABLE, function (Blueprint $table) {
             $table->uuid('id')->primary();
-            // reddit oauth doesn't return email. Enforce NOT NULL email by validating the register form submissions
+            // reddit oauth doesn't return email. Enforce NOT NULL email for non-OAuth users by validating the register form submissions
             $table->string('email', MaxLength::USERS_EMAIL)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('username')->unique();
@@ -37,6 +37,10 @@ return new class extends Migration
             $table->string('reddit_id')->nullable();
             $table->string('reddit_token')->nullable();
             $table->string('reddit_refresh_token')->nullable();
+
+            $table->string('discord_id')->nullable();
+            $table->string('discord_token')->nullable();
+            $table->string('discord_refresh_token')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
