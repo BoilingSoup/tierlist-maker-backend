@@ -29,6 +29,10 @@ return new class extends Migration
             $table->string('gitlab_token')->nullable();
             $table->string('gitlab_refresh_token')->nullable();
 
+            $table->string('google_id')->nullable();
+            $table->string('google_token')->nullable();
+            $table->string('google_refresh_token')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });
