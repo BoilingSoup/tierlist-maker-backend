@@ -42,10 +42,6 @@ return new class extends Migration
             $table->string('discord_token')->nullable();
             $table->string('discord_refresh_token')->nullable();
 
-            $table->string('imgur_id')->nullable();
-            $table->string('imgur_token')->nullable();
-            $table->string('imgur_refresh_token')->nullable();
-
             $table->rememberToken();
             $table->timestamps();
         });
