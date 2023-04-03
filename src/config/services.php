@@ -60,4 +60,10 @@ return [
         'client_secret' => env('DISCORD_CLIENT_SECRET'),
         'redirect' => '/discord/callback',
     ],
+
+    'imgur' => [
+        'client_id' => env('IMGUR_CLIENT_ID'),
+        'client_secret' => env('IMGUR_CLIENT_SECRET'),
+        'redirect' => '/imgur/callback',
+    ],
 ];
