@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Helpers\Images\ImageHelper;
+use App\Helpers\ImageHelper;
 use App\Models\Categories;
 use App\Models\User;
 use Database\Helpers\ImageItemProvider;

@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Helpers\Routes;
+namespace App\Helpers;
 
 class RouteHelper
 {
+    /**
+     * includeRouteFiles recursively requires all .php files under the provided $folder
+     */
     public static function includeRouteFiles(string $folder)
     {
         $dirIterator = new \RecursiveDirectoryIterator($folder);
