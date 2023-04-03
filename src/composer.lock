@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3936ab7f385610043b04f587b40e6d04",
+    "content-hash": "21e1052fefee21f0a56dc5cb000c844f",
     "packages": [
         {
             "name": "brick/math",
@@ -3137,47 +3137,6 @@
                 "source": "https://github.com/socialiteproviders/providers"
             },
             "time": "2023-02-01T08:54:49+00:00"
-        },
-        {
-            "name": "socialiteproviders/imgur",
-            "version": "4.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SocialiteProviders/Imgur.git",
-                "reference": "5d8d8b25dd939712ae9599811acecbb5a724bf46"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Imgur/zipball/5d8d8b25dd939712ae9599811acecbb5a724bf46",
-                "reference": "5d8d8b25dd939712ae9599811acecbb5a724bf46",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.2 || ^8.0",
-                "socialiteproviders/manager": "~4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SocialiteProviders\\Imgur\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Brian Faust",
-                    "email": "hello@brianfaust.de"
-                }
-            ],
-            "description": "Imgur OAuth2 Provider for Laravel Socialite",
-            "support": {
-                "source": "https://github.com/SocialiteProviders/Imgur/tree/4.1.0"
-            },
-            "time": "2020-12-01T23:10:59+00:00"
         },
         {
             "name": "socialiteproviders/manager",

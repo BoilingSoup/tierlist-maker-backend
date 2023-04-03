@@ -37,8 +37,6 @@ class User extends Authenticatable
         'reddit_refresh_token',
         'discord_token',
         'discord_refresh_token',
-        'imgur_token',
-        'imgur_refresh_token',
         'remember_token',
     ];
 
