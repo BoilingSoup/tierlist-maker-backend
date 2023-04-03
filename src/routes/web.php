@@ -1,6 +1,6 @@
 <?php
 
-use App\Helpers\Routes\RouteHelper;
+use App\Helpers\RouteHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 

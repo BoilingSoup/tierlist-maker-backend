@@ -2,7 +2,7 @@
 
 namespace Database\Helpers;
 
-use App\Helpers\Images\ImageHelper;
+use App\Helpers\ImageHelper;
 
 class ImageItemProvider extends \Faker\Provider\Base
 {

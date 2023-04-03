@@ -2,41 +2,66 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\StatusHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserPublicInfoResource;
 use App\Models\User;
-use Database\Helpers\MaxLength;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
 {
+    private bool $requestValidated = false;
+
     /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): UserPublicInfoResource|JsonResponse
     {
-        $request->validate([
-            'username' => ['required', 'string', 'min:4', 'max:'.MaxLength::USERS_USERNAME],
-            'email' => ['required', 'string', 'email', 'max:'.MaxLength::USERS_EMAIL, 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        if (User::emailAndPasswordExists($request->email)) {
+            return response()->json(['message' => StatusHelper::UserWithEmailAlreadyExists], 403);
+        }
 
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $this->validateCredentials($request);
+
+        $user = $this->createUser($request);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return response()->noContent();
+        return new UserPublicInfoResource($user);
+    }
+
+    private function validateCredentials(Request $request)
+    {
+        $request->validate([
+            'username' => ['bail', 'required', 'unique:'.User::TABLE, 'string', 'max:20', 'min:4'],
+            'email' => ['required', 'string', 'email', 'max:30'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $this->requestValidated = true;
+    }
+
+    private function createUser(Request $request)
+    {
+        if (! $this->requestValidated) {
+            // Should never reach here. It's an extra safe-guard to
+            // prevent logical errors in the future.
+            return abort(500);
+        }
+
+        return User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
     }
 }
