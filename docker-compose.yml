@@ -30,21 +30,6 @@ services:
     networks:
       - laravel
 
-  # postgres:
-  #   image: postgres:14.1
-  #   container_name: postgres
-  #   restart: unless-stopped
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: password
-  #     POSTGRES_DB: postgres
-  #   volumes:
-  #     - db_data:/var/lib/postgresql/data
-  #   networks:
-  #     - laravel
-
   test_db:
     image: postgres:14.1
     container_name: test_db
@@ -124,7 +109,6 @@ services:
       - laravel
 
 volumes:
-  db_data: {}
   test_db_data: {}
 
 networks:
