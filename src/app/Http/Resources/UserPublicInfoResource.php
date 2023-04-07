@@ -18,6 +18,7 @@ class UserPublicInfoResource extends JsonResource
             'id' => $this->id,
             'username' => $this->username,
             'is_admin' => (bool) $this->is_admin,
+            'email_verified' => ! is_null($this->email_verified_at),
         ];
     }
 }
