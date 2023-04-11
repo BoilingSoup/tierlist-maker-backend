@@ -26,8 +26,8 @@ Route::get('/google/callback', function () {
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect(config('app.frontend_url'));
     } catch (\Exception) {
-        return redirect('/');
+        return redirect(config('app.frontend_url'));
     }
 });
