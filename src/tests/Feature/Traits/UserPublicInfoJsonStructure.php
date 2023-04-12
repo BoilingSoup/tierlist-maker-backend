@@ -10,7 +10,10 @@ trait UserPublicInfoJsonStructure
             'data' => [
                 'id',
                 'username',
+                'email',
                 'is_admin',
+                'email_verified',
+                'oauth_provider',
             ],
         ];
     }
