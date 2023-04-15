@@ -39,6 +39,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "Tests\\Feature\\V1\\": "tests/Feature/v1/",
       "Tests\\": "tests/"
     }
   },

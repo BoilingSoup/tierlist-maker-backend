@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\StatusHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserPublicInfoResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +22,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): UserPublicInfoResource|JsonResponse
+    public function store(Request $request): UserResource|JsonResponse
     {
         if (User::emailAndPasswordExists($request->email)) {
             return response()->json(['message' => StatusHelper::UserWithEmailAlreadyExists], 403);
@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return new UserPublicInfoResource($user);
+        return new UserResource($user);
     }
 
     private function validateCredentials(Request $request)
