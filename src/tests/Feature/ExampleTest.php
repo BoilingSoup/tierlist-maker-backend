@@ -8,24 +8,24 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    use RefreshDatabase;
+  use RefreshDatabase;
 
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+  /**
+   * A basic test example.
+   */
+  public function test_the_application_returns_a_successful_response(): void
+  {
+    $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
+    $response->assertStatus(200);
+  }
 
-    public function test_test_database_connection_is_successful(): void
-    {
-        $this->assertDatabaseEmpty('users');
+  public function test_test_database_connection_is_successful(): void
+  {
+    $this->assertDatabaseEmpty('users');
 
-        User::factory()->create();
+    User::factory()->create();
 
-        $this->assertDatabaseCount('users', 1);
-    }
+    $this->assertDatabaseCount('users', 1);
+  }
 }
