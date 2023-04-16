@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\Traits\ManageCache;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
@@ -23,11 +24,9 @@ class UserRepository
       $this->clearDependentCacheKeys([TierListRepository::RECENT_CACHE]);
     }
 
-    $isOauth = (bool) Auth::user()->oauth_provider;
+    $isOauth = (bool) Auth::user()->getOAuthProvider();
 
-    if (array_key_first($body) === 'email' && $isOauth) {
-      abort(403);
-    } elseif (array_key_first($body) === 'email' && ! $isOauth) {
+    if (array_key_first($body) === 'email' && ! $isOauth) {
       Auth::user()->email = $body['email'];
       Auth::user()->email_verified_at = null;
       Auth::user()->sendEmailVerificationNotification();
@@ -35,5 +34,12 @@ class UserRepository
     }
 
     return Auth::user();
+  }
+
+  public function changePassword(array $body): void
+  {
+    $newPassword = $body['password'];
+    Auth::user()->password = Hash::make($newPassword);
+    Auth::user()->saveOrFail();
   }
 }
