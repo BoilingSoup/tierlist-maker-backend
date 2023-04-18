@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +23,7 @@ class UpdateUserRequest extends FormRequest
   public function rules(): array
   {
     return [
-        'username' => ['string', 'unique:'.User::TABLE, 'max:20', 'min:4'],
+        'username' => ['string', 'max:20', 'min:4'],
         'email' => ['string', 'email', 'max:30'],
     ];
   }
