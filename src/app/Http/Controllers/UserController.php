@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\StatusHelper;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -57,7 +58,7 @@ class UserController extends Controller
 
     $newEmail = $validated['email'];
     if (Auth::user()->email !== $newEmail && User::emailAndPasswordExists($newEmail)) {
-      abort(403);
+      return response()->json(['message' => StatusHelper::UserWithEmailAlreadyExists], 403);
     }
 
     $user = $this->repository->update($validated);
