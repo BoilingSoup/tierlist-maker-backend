@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
   private function validateCredentials(Request $request)
   {
     $request->validate([
-        'username' => ['bail', 'required', 'string', 'max:20', 'min:4'],
+        'username' => ['bail', 'required', 'unique:'.User::TABLE, 'string', 'max:20', 'min:4'],
         'email' => ['required', 'string', 'email', 'max:30'],
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
     ]);
