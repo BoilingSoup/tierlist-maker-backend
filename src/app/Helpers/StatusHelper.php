@@ -7,7 +7,7 @@ namespace App\Helpers;
  */
 class StatusHelper
 {
-    public const UserWithEmailAlreadyExists = 'A user with this email already exists.';
+  public const UserWithEmailAlreadyExists = 'This email is already in use.';
 
-    public const AlreadySignedIn = 'You are already signed in.';
+  public const AlreadySignedIn = 'You are already signed in.';
 }
