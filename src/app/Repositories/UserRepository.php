@@ -29,8 +29,8 @@ class UserRepository
     if (array_key_first($body) === 'email' && ! $isOauth) {
       Auth::user()->email = $body['email'];
       Auth::user()->email_verified_at = null;
-      Auth::user()->sendEmailVerificationNotification();
       Auth::user()->saveOrFail();
+      Auth::user()->sendEmailVerificationNotification();
     }
 
     return Auth::user();
