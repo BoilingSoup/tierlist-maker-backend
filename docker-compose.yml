@@ -81,6 +81,7 @@ services:
       context: ./.docker/composer/
       dockerfile: Dockerfile
     container_name: composer
+    user: 1000:1001
     volumes:
       - ./:/app/laravel
     networks:
