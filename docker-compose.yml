@@ -70,6 +70,7 @@ services:
       context: ./.docker/laravel-installer/artisan/
       dockerfile: Dockerfile
     container_name: artisan
+    userns_mode: "keep-id"
     volumes:
       - ./:/app/laravel
     networks:
