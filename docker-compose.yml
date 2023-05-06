@@ -81,7 +81,6 @@ services:
       context: ./.docker/composer/
       dockerfile: Dockerfile
     container_name: composer
-    userns_mode: "keep-id"
     volumes:
       - ./:/app/laravel
     networks:
