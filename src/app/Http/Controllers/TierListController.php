@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TierListSaveRequest;
+use App\Http\Requests\SaveNewTierListRequest;
 use App\Repositories\TierListRepository;
 use Illuminate\Http\Request;
 
@@ -26,19 +26,13 @@ class TierListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TierListSaveRequest $request)
+    public function store(SaveNewTierListRequest $request)
     {
       $validated = (array) $request->validated();
 
-      $this->repository->store($validated);
+      $savedData = $this->repository->store($validated);
 
-      // save to db
-
-      // return model to client including UUID, use UUID to redirect on frontend
-
-      return [
-          'data' => 'yo yo yo yo',
-      ];
+      return $savedData;
     }
 
     /**
