@@ -36,11 +36,6 @@ class TierList extends Model
           ->withTimestamps();
     }
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Categories::class, Categories::FOREIGN_KEY);
-    }
-
     public function scopeOrderByRecency(Builder $builder): Builder
     {
         return $builder->orderBy(Model::CREATED_AT, 'desc');

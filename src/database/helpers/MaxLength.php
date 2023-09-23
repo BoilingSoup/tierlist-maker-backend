@@ -10,5 +10,7 @@ class MaxLength
 
     const USERS_PASSWORD = 60;
 
-    const TIER_LISTS_TITLE = 40;
+    const TIER_LISTS_TITLE = 80;
+
+    const TIER_LISTS_DESCRIPTION = 100;
 }

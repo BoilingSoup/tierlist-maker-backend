@@ -17,6 +17,11 @@ class TierListRepository
 
   const RECENT_CACHE = 'TLR_R';
 
+  public function store(array $validatedData)
+  {
+      dd($validatedData);
+  }
+
   public function recent(): Collection
   {
     return Cache::tags([static::ALL_CACHE])->rememberForever(

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Categories;
 use App\Models\TierList;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -17,17 +16,11 @@ class TierListsSeeder extends Seeder
     {
         // Get all the users and categories
         $users = User::all();
-        $categories = Categories::all();
 
-        // For each user, create a tier list, randomly set
-        // is_public field and a category
-
-        $users->each(function (User $user) use ($categories) {
-            $category = $categories->random();
-
+        // For each user, create a tier list.
+        $users->each(function (User $user) {
             TierList::factory()->create([
                 User::FOREIGN_KEY => $user,
-                Categories::FOREIGN_KEY => $category,
             ]);
         });
 
