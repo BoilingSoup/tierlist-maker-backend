@@ -24,7 +24,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignUuid(User::FOREIGN_KEY)->references('id')->on(User::TABLE)->cascadeOnDelete();
-            // $table->foreignUuid(Categories::FOREIGN_KEY)->references('id')->on(Categories::TABLE);
         });
     }
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\Traits\ManageCache;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class TierListRepository
@@ -19,7 +20,18 @@ class TierListRepository
 
   public function store(array $validatedData)
   {
-      dd($validatedData);
+    $tierList = TierList::create([
+        'title' => $validatedData['title'] ?? 'Untitled - '.now()->toDateTimeString(),
+        'data' => json_encode($validatedData['data']),
+        'thumbnail' => $validatedData['thumbnail'] ?? 'dummy',
+        'description' => $validatedData['description'] ?? null,
+        'is_public' => (bool) $validatedData['is_public'],
+        User::FOREIGN_KEY => Auth::user()->id,
+    ]);
+
+    // TODO: flush user's cache
+
+    return $tierList;
   }
 
   public function recent(): Collection
