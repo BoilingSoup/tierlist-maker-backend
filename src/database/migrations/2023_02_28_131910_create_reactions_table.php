@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->comment('Maintains data about likes and dislikes of public tier lists.');
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->boolean('like');
             $table->boolean('dislike');
             $table->timestamps();

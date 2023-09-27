@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
 use App\Repositories\TierListRepository;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class TierListController extends Controller
 {
@@ -30,6 +32,8 @@ class TierListController extends Controller
     {
       $validated = (array) $request->validated();
 
+      // TODO: thumbnail and image upload
+
       $savedData = $this->repository->store($validated);
 
       return $savedData;
@@ -38,9 +42,23 @@ class TierListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $uuid)
     {
-    //
+      if (! Uuid::isValid($uuid)) {
+        abort(404);
+
+        return;
+      }
+
+      $tierList = $this->repository->getOrFail($uuid);
+
+      if (! AuthorizationHelper::canShowTierList($tierList)) {
+        abort(404);
+
+        return;
+      }
+
+      return $tierList;
     }
 
     /**

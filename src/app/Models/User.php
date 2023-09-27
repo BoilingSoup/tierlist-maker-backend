@@ -92,6 +92,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPasswordC
       ->withTimestamps();
   }
 
+  public function images(): BelongsToMany
+  {
+    $pivotTableName = Image::TABLE.'_'.User::TABLE;
+
+    return $this->belongsToMany(Image::class, $pivotTableName, User::FOREIGN_KEY, Image::FOREIGN_KEY);
+  }
+
   public function scopeWherePasswordIsNotNull(Builder $query)
   {
     return $query->whereNotNull('password');

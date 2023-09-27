@@ -18,6 +18,14 @@ class TierListRepository
 
   const RECENT_CACHE = 'TLR_R';
 
+  public function getOrFail(string $uuid)
+  {
+    return Cache::tags([static::ALL_CACHE])->rememberForever(
+      key: $uuid,
+      callback: fn () => TierList::findOrFail($uuid)->makeHidden(User::FOREIGN_KEY)
+    );
+  }
+
   public function store(array $validatedData)
   {
     $tierList = TierList::create([
@@ -25,9 +33,9 @@ class TierListRepository
         'data' => json_encode($validatedData['data']),
         'thumbnail' => $validatedData['thumbnail'] ?? 'dummy',
         'description' => $validatedData['description'] ?? null,
-        'is_public' => (bool) $validatedData['is_public'],
+        'is_public' => false,
         User::FOREIGN_KEY => Auth::user()->id,
-    ]);
+    ])->makeHidden(User::FOREIGN_KEY);
 
     // TODO: flush user's cache
 

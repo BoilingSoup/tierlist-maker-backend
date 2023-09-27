@@ -22,7 +22,8 @@ class TierListDataRules implements ValidationRule
         }
 
         $validator = Validator::make($value, [
-            'sidebar' => ['required', new ImageDataRules()],
+            'sidebar' => ['array'],
+            'sidebar.*' => [new ImageDataRules()],
             'rows' => ['required', new RowsDataRules()],
         ]);
 
