@@ -28,7 +28,6 @@ class SaveNewTierListRequest extends FormRequest
             'data' => ['required', new TierListDataRules()],
             'thumbnail' => 'string',
             'description' => ['string', 'nullable', 'max:'.MaxLength::TIER_LISTS_DESCRIPTION],
-            'is_public' => ['required', 'boolean'],
         ];
     }
 }
