@@ -18,7 +18,7 @@ class TierListRepository
 
   const RECENT_CACHE = 'TLR_R';
 
-  public function getOrFail(string $uuid)
+  public function getOrFail(string $uuid): TierList
   {
     return Cache::tags([static::ALL_CACHE])->rememberForever(
       key: $uuid,
