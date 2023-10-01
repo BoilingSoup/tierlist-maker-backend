@@ -52,9 +52,9 @@ class TierListRepository
     $tierList->update($validatedData);
     $tierList->save();
 
-    Cache::forget($tierList->uuid);
+    Cache::tags([static::ALL_CACHE])->forget($tierList->id);
     if ($tierList->is_public) {
-      Cache::forget(static::RECENT_CACHE);
+      Cache::tags([static::ALL_CACHE])->forget(static::RECENT_CACHE);
     }
     // flush user cache
 
