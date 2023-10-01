@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
+use App\Http\Requests\UpdateTierListRequest;
 use App\Repositories\TierListRepository;
-use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 
 class TierListController extends Controller
@@ -31,8 +31,6 @@ class TierListController extends Controller
     public function store(SaveNewTierListRequest $request)
     {
       $validated = (array) $request->validated();
-
-      // TODO: thumbnail and image upload
 
       $savedData = $this->repository->store($validated);
 
@@ -64,9 +62,27 @@ class TierListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTierListRequest $request, string $uuid)
     {
-    //
+      $validated = (array) $request->validated();
+
+      if (! Uuid::isValid($uuid)) {
+        abort(422);
+
+        return;
+      }
+
+      $tierList = $this->repository->getOrFail($uuid);
+
+      if (! AuthorizationHelper::canUpdateTierList($tierList)) {
+        abort(403);
+
+        return;
+      }
+
+      $this->repository->update($tierList, $validated);
+
+      return response()->noContent();
     }
 
     /**
