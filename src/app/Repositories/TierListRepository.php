@@ -26,6 +26,11 @@ class TierListRepository
     );
   }
 
+  public function index()
+  {
+    //
+  }
+
   public function store(array $validatedData)
   {
     $tierList = TierList::create([
@@ -38,6 +43,20 @@ class TierListRepository
     ])->makeHidden(User::FOREIGN_KEY);
 
     // TODO: flush user's cache
+
+    return $tierList;
+  }
+
+  public function update(TierList $tierList, array $validatedData)
+  {
+    $tierList->update($validatedData);
+    $tierList->save();
+
+    Cache::forget($tierList->uuid);
+    if ($tierList->is_public) {
+      Cache::forget(static::RECENT_CACHE);
+    }
+    // flush user cache
 
     return $tierList;
   }

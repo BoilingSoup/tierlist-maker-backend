@@ -23,7 +23,7 @@ class ImageDataRules implements ValidationRule
 
         $validator = Validator::make($value, [
             'id' => ['required', 'string'],
-            'src' => ['required', 'string'],
+            'src' => ['required', 'url:https'],
         ]);
 
         $validator->validate();

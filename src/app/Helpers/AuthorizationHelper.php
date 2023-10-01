@@ -14,4 +14,9 @@ class AuthorizationHelper
   {
     return $tierList->is_public || Auth::user()?->id === $tierList->user_id;
   }
+
+  public static function canUpdateTierList(TierList $tierList): bool
+  {
+    return $tierList->user_id === Auth::user()?->id;
+  }
 }
