@@ -69,9 +69,9 @@ class TierListController extends Controller
 
       $this->repository->deleteUnusedImages($tierList, $validated);
 
-      $this->repository->update($tierList, $validated);
+      $updated = $this->repository->update($tierList, $validated);
 
-      return response()->noContent();
+      return $updated;
     }
 
     /**
