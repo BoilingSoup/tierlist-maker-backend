@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
 use App\Http\Requests\ImageUploadRequest;
 use App\Http\Requests\ReplaceThumbnailRequest;
 use App\Repositories\TierListRepository;
 use Auth;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Nette\Utils\Arrays;
 
 class ImageController extends Controller
 {
@@ -44,9 +44,7 @@ class ImageController extends Controller
       return;
     }
 
-    $oldThumbnail = $tierList->thumbnail;
-    $idWithExtension = Arrays::last(explode('/', $oldThumbnail));
-    $id = Arrays::first(explode('.', $idWithExtension));
+    $id = ImageHelper::UrlToPublicID($tierList->thumbnail);
 
     Cloudinary::destroy($id);
 
