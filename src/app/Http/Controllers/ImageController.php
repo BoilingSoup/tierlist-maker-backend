@@ -7,7 +7,6 @@ use App\Http\Requests\ReplaceThumbnailRequest;
 use App\Repositories\TierListRepository;
 use Auth;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\Log;
 use Nette\Utils\Arrays;
 use Ramsey\Uuid\Uuid;
 
@@ -24,7 +23,6 @@ class ImageController extends Controller
   {
     $validatedImages = $request->validated()['image'];
 
-    // Log::debug($validated['image'][0]->getRealPath());
     $paths = [];
 
     foreach ($validatedImages as $image) {
@@ -36,7 +34,7 @@ class ImageController extends Controller
 
   public function replaceThumbnail(ReplaceThumbnailRequest $request, string $uuid)
   {
-    $newThumbnail = $request->validated()['image'];
+    $newThumbnail = $request->validated()['thumbnail'];
 
     if (! Uuid::isValid($uuid)) {
       abort(404);
@@ -57,7 +55,7 @@ class ImageController extends Controller
     $idWithExtension = Arrays::last(explode('/', $oldThumbnail));
     $id = Arrays::first(explode('.', $idWithExtension));
 
-    Cloudinary::destroyAsync($id);
+    Cloudinary::destroy($id);
 
     $this->tierListRepository->update($tierList, [
         'thumbnail' => Cloudinary::upload($newThumbnail->getRealPath())->getSecurePath(),

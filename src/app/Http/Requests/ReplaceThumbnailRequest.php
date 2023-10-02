@@ -22,7 +22,7 @@ class ReplaceThumbnailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'thumbnail' => ['image', 'mimes:jpg,jpeg,png,bmp,webp', 'max:1024'],
+            'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,webp|max:1024',
         ];
     }
 }

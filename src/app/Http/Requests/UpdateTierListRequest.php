@@ -24,7 +24,7 @@ class UpdateTierListRequest extends FormRequest
     {
         return [
             'data' => ['required', new TierListDataRules()],
-            'thumbnail' => ['required', 'url:https'],
+            // 'thumbnail' => ['required', 'url:https'],
         ];
     }
 }
