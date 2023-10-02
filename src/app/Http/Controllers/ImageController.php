@@ -8,7 +8,6 @@ use App\Repositories\TierListRepository;
 use Auth;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Nette\Utils\Arrays;
-use Ramsey\Uuid\Uuid;
 
 class ImageController extends Controller
 {
@@ -35,12 +34,6 @@ class ImageController extends Controller
   public function replaceThumbnail(ReplaceThumbnailRequest $request, string $uuid)
   {
     $newThumbnail = $request->validated()['thumbnail'];
-
-    if (! Uuid::isValid($uuid)) {
-      abort(404);
-
-      return;
-    }
 
     $tierList = $this->tierListRepository->getOrFail($uuid);
     $isOwner = $tierList->user_id === Auth::user()?->id;

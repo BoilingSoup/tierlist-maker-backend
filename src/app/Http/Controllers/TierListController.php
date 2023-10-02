@@ -6,7 +6,6 @@ use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
 use App\Http\Requests\UpdateTierListRequest;
 use App\Repositories\TierListRepository;
-use Ramsey\Uuid\Uuid;
 
 class TierListController extends Controller
 {
@@ -42,12 +41,6 @@ class TierListController extends Controller
      */
     public function show(string $uuid)
     {
-      if (! Uuid::isValid($uuid)) {
-        abort(404);
-
-        return;
-      }
-
       $tierList = $this->repository->getOrFail($uuid);
 
       if (! AuthorizationHelper::canShowTierList($tierList)) {
@@ -65,12 +58,6 @@ class TierListController extends Controller
     public function update(UpdateTierListRequest $request, string $uuid)
     {
       $validated = (array) $request->validated();
-
-      if (! Uuid::isValid($uuid)) {
-        abort(422);
-
-        return;
-      }
 
       $tierList = $this->repository->getOrFail($uuid);
 
@@ -90,7 +77,7 @@ class TierListController extends Controller
      */
     public function destroy(string $id)
     {
-    //
+
     }
 
     /**
