@@ -13,10 +13,10 @@ class ImageHelper
 
     const THUMBNAIL_HEIGHT = 420;
 
-  public static function UrlToPublicID(string $url): string
-  {
-    $idWithExtension = Arrays::last(explode('/', $url));
+    public static function UrlToPublicID(string $url): string
+    {
+      $idWithExtension = Arrays::last(explode('/', $url));
 
-    return Arrays::first(explode('.', $idWithExtension));
-  }
+      return Arrays::first(explode('.', $idWithExtension));
+    }
 }
