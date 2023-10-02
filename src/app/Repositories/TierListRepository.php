@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Helpers\ImageHelper;
 use App\Models\TierList;
 use App\Models\User;
 use App\Repositories\Traits\ManageCache;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -73,5 +75,61 @@ class TierListRepository
         ->get()
         ->makeHidden(User::FOREIGN_KEY)
     );
+  }
+
+  public function deleteUnusedImages(TierList $tierList, array $validatedData)
+  {
+    $allValidatedDataImages = [];
+
+    $validatedSidebar = $validatedData['data']['sidebar'];
+    $validatedRows = $validatedData['data']['rows'];
+
+    foreach ($validatedSidebar as $image) {
+      $src = $image['src'];
+      $allValidatedDataImages[$src] = true;
+    }
+
+    foreach ($validatedRows as $row) {
+      $images = $row['items'];
+
+      foreach ($images as $image) {
+        $src = $image['src'];
+        $allValidatedDataImages[$src] = true;
+      }
+    }
+
+    $currTierListData = json_decode($tierList->data, true);
+    $currRows = $currTierListData['rows'];
+    $currSidebar = $currTierListData['sidebar'];
+
+    $deletedImageIDs = [];
+
+    foreach ($currRows as $row) {
+      $images = $row['items'];
+
+      foreach ($images as $image) {
+        $src = $image['src'];
+
+        if (array_key_exists($src, $allValidatedDataImages)) {
+          continue;
+        }
+
+        array_push($deletedImageIDs, ImageHelper::UrlToPublicID($src));
+      }
+    }
+
+    foreach ($currSidebar as $image) {
+        $src = $image['src'];
+
+        if (array_key_exists($src, $allValidatedDataImages)) {
+          continue;
+        }
+
+        array_push($deletedImageIDs, ImageHelper::UrlToPublicID($src));
+    }
+
+    foreach ($deletedImageIDs as $id) {
+        Cloudinary::destroy($id);
+    }
   }
 }
