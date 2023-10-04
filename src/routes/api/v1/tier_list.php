@@ -12,4 +12,6 @@ Route::name('v1.tierlist.')->group(function () {
   Route::post('/tierlist', [TierListController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('store');
 
   Route::put('/tierlist/{uuid}', [TierListController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->whereUuid('uuid')->name('update');
+
+  Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->middleware(['auth:sanctum', 'verified'])->whereUuid('userID')->name('indexUser');
 });
