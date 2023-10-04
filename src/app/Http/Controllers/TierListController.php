@@ -6,6 +6,8 @@ use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
 use App\Http\Requests\UpdateTierListRequest;
 use App\Repositories\TierListRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TierListController extends Controller
 {
@@ -22,6 +24,17 @@ class TierListController extends Controller
     public function index()
     {
     //
+    }
+
+    /**
+     * Display a listing of the resource owned by the authenticated user.
+     */
+    public function indexOfUser(Request $request)
+    {
+      $userID = Auth::user()?->id;
+      $cursor = $request->cursor ?? '';
+
+      return $this->repository->getUserTierListsInfo($userID, $cursor);
     }
 
     /**
