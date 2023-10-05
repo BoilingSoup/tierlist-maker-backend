@@ -12,10 +12,20 @@ class AuthorizationHelper
 {
   public static function canShowTierList(TierList $tierList): bool
   {
-    return $tierList->is_public || Auth::user()?->id === $tierList->user_id;
+    return $tierList->is_public || static::userOwnsTierList($tierList);
   }
 
   public static function canUpdateTierList(TierList $tierList): bool
+  {
+    return static::userOwnsTierList($tierList);
+  }
+
+  public static function canDeleteTierList(TierList $tierList): bool
+  {
+    return static::userOwnsTierList($tierList);
+  }
+
+  private static function userOwnsTierList(TierList $tierList): bool
   {
     return $tierList->user_id === Auth::user()?->id;
   }
