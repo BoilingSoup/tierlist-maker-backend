@@ -14,4 +14,6 @@ Route::name('v1.tierlist.')->group(function () {
   Route::put('/tierlist/{uuid}', [TierListController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->whereUuid('uuid')->name('update');
 
   Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->middleware(['auth:sanctum', 'verified'])->whereUuid('userID')->name('indexUser');
+
+  Route::delete('/tierlist/{uuid}', [TierListController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->whereUuid('uuid')->name('destroy');
 });

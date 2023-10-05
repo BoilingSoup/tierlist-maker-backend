@@ -6,6 +6,8 @@ use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
 use App\Http\Requests\UpdateTierListRequest;
 use App\Repositories\TierListRepository;
+use App\Services\DataHandlerService;
+use App\Services\ImageManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,9 +15,15 @@ class TierListController extends Controller
 {
     protected TierListRepository $repository;
 
-    public function __construct(TierListRepository $repository)
+    protected ImageManagementService $imageManagementService;
+
+    protected DataHandlerService $dataHandlerService;
+
+    public function __construct(TierListRepository $repository, ImageManagementService $imageManagementService, DataHandlerService $dataHandlerService)
     {
         $this->repository = $repository;
+        $this->imageManagementService = $imageManagementService;
+        $this->dataHandlerService = $dataHandlerService;
     }
 
     /**
@@ -80,7 +88,9 @@ class TierListController extends Controller
         return;
       }
 
-      $this->repository->deleteUnusedImages($tierList, $validated);
+      $unusedImageIDs = $this->dataHandlerService->getDeletedImageIDs($tierList, $validated);
+
+      $this->imageManagementService->deleteImages($unusedImageIDs);
 
       $updated = $this->repository->update($tierList, $validated);
 
@@ -90,9 +100,23 @@ class TierListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
+      $tierList = $this->repository->getOrFail($uuid);
 
+      if (! AuthorizationHelper::canDeleteTierList($tierList)) {
+        abort(403);
+
+        return;
+      }
+
+      $allImageIDs = $this->dataHandlerService->getAllImageIDs($tierList, includeThumbnailID: true);
+
+      $this->imageManagementService->deleteImages($allImageIDs);
+
+      $this->repository->destroy($tierList);
+
+      return response()->noContent();
     }
 
     /**

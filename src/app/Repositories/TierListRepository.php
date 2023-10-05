@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Helpers\ImageHelper;
 use App\Models\TierList;
 use App\Models\User;
 use App\Repositories\Traits\ManageCache;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Services\ImageManagementService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +18,13 @@ class TierListRepository
   const ALL_CACHE = 'TLR';
 
   const RECENT_CACHE = 'TLR_R';
+
+  public ImageManagementService $imageManagementService;
+
+  public function __construct(ImageManagementService $imageManagementService)
+  {
+    $this->imageManagementService = $imageManagementService;
+  }
 
   public function getOrFail(string $tierListID): TierList
   {
@@ -54,7 +60,7 @@ class TierListRepository
         User::FOREIGN_KEY => $userID,
     ])->makeHidden(User::FOREIGN_KEY);
 
-    Cache::tags([$userID])->flush();
+    $this->flushUserTierListInfoCache($tierList->user_id);
 
     // TODO: if public, refresh recent
 
@@ -66,8 +72,8 @@ class TierListRepository
     $tierList->update($validatedData);
     $tierList->save();
 
-    Cache::tags([$tierList->user_id])->flush(); // must be owner to update, so $tierList->user_id is always the request sender.
-    Cache::tags([static::ALL_CACHE])->forget($tierList->id);
+    $this->flushUserTierListInfoCache($tierList->user_id);
+    $this->flushTierListCacheByID($tierList->id);
     if ($tierList->is_public) {
       Cache::tags([static::ALL_CACHE])->forget(static::RECENT_CACHE);
     }
@@ -89,59 +95,29 @@ class TierListRepository
     );
   }
 
-  public function deleteUnusedImages(TierList $tierList, array $validatedData)
+  public function destroy(TierList $tierList)
   {
-    $allValidatedDataImages = [];
+    // NOTE: when a user clones a public tierlist, they must reupload the images to cloudinary for consistency.
+    TierList::destroy($tierList->id);
 
-    $validatedSidebar = $validatedData['data']['sidebar'];
-    $validatedRows = $validatedData['data']['rows'];
+    // always flush user, and individual GET id
+    $this->flushUserTierListInfoCache($tierList->user_id);
+    $this->flushTierListCacheByID($tierList->id);
 
-    foreach ($validatedSidebar as $image) {
-      $src = $image['src'];
-      $allValidatedDataImages[$src] = true;
+    // if public flush index & recent
+    if ($tierList->is_public) {
+      Cache::tags([static::ALL_CACHE])->forget(static::RECENT_CACHE);
     }
 
-    foreach ($validatedRows as $row) {
-      $images = $row['items'];
+  }
 
-      foreach ($images as $image) {
-        $src = $image['src'];
-        $allValidatedDataImages[$src] = true;
-      }
-    }
+  public function flushUserTierListInfoCache(string $userID)
+  {
+    Cache::tags([$userID])->flush();
+  }
 
-    $currTierListData = json_decode($tierList->data, true);
-    $currRows = $currTierListData['rows'];
-    $currSidebar = $currTierListData['sidebar'];
-
-    $deletedImageIDs = [];
-
-    foreach ($currRows as $row) {
-      $images = $row['items'];
-
-      foreach ($images as $image) {
-        $src = $image['src'];
-
-        if (array_key_exists($src, $allValidatedDataImages)) {
-          continue;
-        }
-
-        array_push($deletedImageIDs, ImageHelper::UrlToPublicID($src));
-      }
-    }
-
-    foreach ($currSidebar as $image) {
-        $src = $image['src'];
-
-        if (array_key_exists($src, $allValidatedDataImages)) {
-          continue;
-        }
-
-        array_push($deletedImageIDs, ImageHelper::UrlToPublicID($src));
-    }
-
-    foreach ($deletedImageIDs as $id) {
-        Cloudinary::destroy($id);
-    }
+  public function flushTierListCacheByID(string $tierListID)
+  {
+    Cache::tags([static::ALL_CACHE])->forget($tierListID);
   }
 }
