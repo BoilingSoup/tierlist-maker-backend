@@ -38,7 +38,8 @@ class TierListRepository
   {
     return Cache::tags([static::ALL_CACHE, $userID])->rememberForever(
       key: $userID.$cursor,
-      callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', 'created_at', 'updated_at')->where(User::FOREIGN_KEY, $userID)->cursorPaginate(perPage: 12)
+      callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', Model::CREATED_AT, Model::UPDATED_AT, User::FOREIGN_KEY)
+        ->where(User::FOREIGN_KEY, $userID)->cursorPaginate(perPage: 12)
     );
   }
 

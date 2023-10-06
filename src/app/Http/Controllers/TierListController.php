@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\SaveNewTierListRequest;
+use App\Http\Requests\UpdatePublicStatusRequest;
 use App\Http\Requests\UpdateTierListInfoRequest;
 use App\Http\Requests\UpdateTierListRequest;
 use App\Repositories\TierListRepository;
@@ -99,6 +100,23 @@ class TierListController extends Controller
     }
 
     public function updateInfo(UpdateTierListInfoRequest $request, string $uuid)
+    {
+      $validated = (array) $request->validated();
+
+      $tierList = $this->repository->getOrFail($uuid);
+
+      if (! AuthorizationHelper::canUpdateTierList($tierList)) {
+        abort(403);
+
+        return;
+      }
+
+      $updated = $this->repository->update($tierList, $validated);
+
+      return $updated;
+    }
+
+    public function updatePublicStatus(UpdatePublicStatusRequest $request, string $uuid)
     {
       $validated = (array) $request->validated();
 
