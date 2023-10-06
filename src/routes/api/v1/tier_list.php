@@ -9,14 +9,18 @@ Route::name('v1.tierlist.')->group(function () {
 
   Route::get('/tierlist/{uuid}', [TierListController::class, 'show'])->whereUuid('uuid')->name('show');
 
-  Route::post('/tierlist', [TierListController::class, 'store'])->middleware(['auth:sanctum', 'verified'])->name('store');
+  Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
-  Route::put('/tierlist/{uuid}', [TierListController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->whereUuid('uuid')->name('update');
+    Route::post('/tierlist', [TierListController::class, 'store'])->name('store');
 
-  Route::patch('/tierlist/{uuid}', [TierListController::class, 'updateInfo'])->middleware('auth:sanctum', 'verified')->whereUuid('uuid')->name('updateInfo');
+    Route::put('/tierlist/{uuid}', [TierListController::class, 'update'])->whereUuid('uuid')->name('update');
 
-  Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->middleware(['auth:sanctum', 'verified'])->whereUuid('userID')->name('indexUser');
+    Route::patch('/tierlist/{uuid}', [TierListController::class, 'updateInfo'])->whereUuid('uuid')->name('updateInfo');
 
-  Route::delete('/tierlist/{uuid}', [TierListController::class, 'destroy'])->middleware(['auth:sanctum', 'verified'])->whereUuid('uuid')->name('destroy');
+    Route::patch('/tierlist/{uuid}/isPublic', [TierListController::class, 'updatePublicStatus'])->whereUuid('uuid')->name('updatePublicStatus');
 
+    Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->whereUuid('userID')->name('indexUser');
+
+    Route::delete('/tierlist/{uuid}', [TierListController::class, 'destroy'])->whereUuid('uuid')->name('destroy');
+  });
 });
