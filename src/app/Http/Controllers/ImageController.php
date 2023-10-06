@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ImageHelper;
+use App\Helpers\AuthorizationHelper;
 use App\Http\Requests\ImageUploadRequest;
 use App\Http\Requests\ReplaceThumbnailRequest;
 use App\Repositories\TierListRepository;
-use Auth;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Services\ImageManagementService;
 
 class ImageController extends Controller
 {
   public TierListRepository $tierListRepository;
 
-  public function __construct(TierListRepository $tierListRepository)
+  public ImageManagementService $imageManagementService;
+
+  public function __construct(TierListRepository $tierListRepository, ImageManagementService $imageManagementService)
   {
     $this->tierListRepository = $tierListRepository;
+    $this->imageManagementService = $imageManagementService;
   }
 
   public function store(ImageUploadRequest $request)
   {
     $validatedImages = $request->validated()['image'];
 
-    $paths = [];
-
-    foreach ($validatedImages as $image) {
-      array_push($paths, Cloudinary::upload($image->getRealPath())->getSecurePath());
-    }
+    $paths = $this->imageManagementService->uploadImages($validatedImages);
 
     return ['data' => $paths];
   }
@@ -36,20 +34,17 @@ class ImageController extends Controller
     $newThumbnail = $request->validated()['thumbnail'];
 
     $tierList = $this->tierListRepository->getOrFail($uuid);
-    $isOwner = $tierList->user_id === Auth::user()?->id;
 
-    if (! $isOwner) {
+    if (! AuthorizationHelper::canUpdateTierList($tierList)) {
       abort(404);
 
       return;
     }
 
-    $id = ImageHelper::UrlToPublicID($tierList->thumbnail);
-
-    Cloudinary::destroy($id);
+    $path = $this->imageManagementService->replaceThumbnail($tierList, $newThumbnail);
 
     $this->tierListRepository->update($tierList, [
-        'thumbnail' => Cloudinary::upload($newThumbnail->getRealPath())->getSecurePath(),
+        'thumbnail' => $path,
     ]);
 
     return response()->noContent();
