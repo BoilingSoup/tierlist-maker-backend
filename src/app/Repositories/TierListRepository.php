@@ -6,6 +6,7 @@ use App\Models\TierList;
 use App\Models\User;
 use App\Repositories\Traits\ManageCache;
 use App\Services\ImageManagementService;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -125,6 +126,20 @@ const INDEX_CACHE = 'TLR_I';
       $this->flushAllPublicCache();
     }
 
+  }
+
+  public function destroyAll(array $tierListIDs, bool $flushCache = true)
+  {
+    TierList::destroy($tierListIDs);
+
+    if ($flushCache) {
+      Cache::flush();
+    }
+  }
+
+  public function getBatch(Authenticatable $user, int $batchSize = 5): Collection
+  {
+    return TierList::where(User::FOREIGN_KEY, $user->id)->take($batchSize)->get();
   }
 
   public function flushUserTierListInfoCache(string $userID)

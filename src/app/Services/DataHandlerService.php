@@ -4,9 +4,22 @@ namespace App\Services;
 
 use App\Helpers\ImageHelper;
 use App\Models\TierList;
+use App\Repositories\TierListRepository;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Collection;
 
 class DataHandlerService
 {
+  public TierListRepository $tierListRepository;
+
+  public ImageManagementService $imageManagementService;
+
+  public function __construct(TierListRepository $tierListRepository, ImageManagementService $imageManagementService)
+  {
+    $this->tierListRepository = $tierListRepository;
+    $this->imageManagementService = $imageManagementService;
+  }
+
   /**
    * Compares img src URLs of old vs new data, and returns an array of image IDs no longer in use.
    */
@@ -91,5 +104,58 @@ class DataHandlerService
     }
 
     return $allIDs;
+  }
+
+  public function deleteAllTierListsInBatches(Authenticatable $user, int $batchSize = 5)
+  {
+    $batch = $this->tierListRepository->getBatch(user: $user, batchSize: $batchSize);
+
+    function deleteRecursively(
+      Collection $collection,
+      TierListRepository $tierListRepository,
+      DataHandlerService $dataHandler,
+      ImageManagementService $imageManager,
+      int $batchSize, Authenticatable $user
+    ) {
+      if ($collection->count() === 0) {
+        return;
+      }
+
+      $allIDs = [];
+
+      $collection->each(function (TierList $tierList) use ($dataHandler, $imageManager, &$allIDs) {
+        $allTierListImagesIDs = $dataHandler->getAllImageIDs($tierList, true);
+        $imageManager->deleteImages($allTierListImagesIDs);
+
+        unset($allTierListImagesIDs); // try to free some memory
+
+        array_push($allIDs, $tierList->id);
+      });
+      unset($collection); // try to free some memory
+
+      $tierListRepository->destroyAll($allIDs, flushCache: false);
+
+      unset($allIDs); // try to free some memory
+
+      $batch = $tierListRepository->getBatch(user: $user, batchSize: $batchSize);
+
+      deleteRecursively(
+        collection: $batch,
+        tierListRepository: $tierListRepository,
+        dataHandler: $dataHandler,
+        imageManager: $imageManager,
+        batchSize: $batchSize,
+        user: $user
+      );
+    }
+
+    deleteRecursively(
+      collection: $batch,
+      tierListRepository: $this->tierListRepository,
+      dataHandler: $this,
+      imageManager: $this->imageManagementService,
+      batchSize: $batchSize,
+      user: $user
+    );
   }
 }
