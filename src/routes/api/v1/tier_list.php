@@ -21,8 +21,10 @@ Route::name('v1.tierlist.')->group(function () {
 
     Route::patch('/tierlist/{uuid}/isPublic', [TierListController::class, 'updatePublicStatus'])->whereUuid('uuid')->name('updatePublicStatus');
 
-    Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->whereUuid('userID')->name('indexUser');
-
     Route::delete('/tierlist/{uuid}', [TierListController::class, 'destroy'])->whereUuid('uuid')->name('destroy');
+  });
+
+  Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user/{userID}/tierlists', [TierListController::class, 'indexOfUser'])->whereUuid('userID')->name('indexUser');
   });
 });
