@@ -17,7 +17,11 @@ class TierListRepository
 
   const ALL_CACHE = 'TLR';
 
+  const PUBLIC_CACHE = 'TLR_P';
+
   const RECENT_CACHE = 'TLR_R';
+
+const INDEX_CACHE = 'TLR_I';
 
   public ImageManagementService $imageManagementService;
 
@@ -26,11 +30,20 @@ class TierListRepository
     $this->imageManagementService = $imageManagementService;
   }
 
+  public function index()
+  {
+    return Cache::tags([static::ALL_CACHE, static::PUBLIC_CACHE])->rememberForever(
+      key: static::INDEX_CACHE,
+      callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', Model::CREATED_AT, Model::UPDATED_AT, User::FOREIGN_KEY)
+        ->where('is_public', true)->cursorPaginate(perPage: 12)
+    );
+  }
+
   public function getOrFail(string $tierListID): TierList
   {
     return Cache::tags([static::ALL_CACHE])->rememberForever(
       key: $tierListID,
-      callback: fn () => TierList::findOrFail($tierListID)->makeHidden(User::FOREIGN_KEY)
+      callback: fn () => TierList::findOrFail($tierListID)
     );
   }
 
@@ -41,11 +54,6 @@ class TierListRepository
       callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', Model::CREATED_AT, Model::UPDATED_AT, User::FOREIGN_KEY)
         ->where(User::FOREIGN_KEY, $userID)->cursorPaginate(perPage: 12)
     );
-  }
-
-  public function index()
-  {
-    //
   }
 
   public function store(array $validatedData)
@@ -59,11 +67,13 @@ class TierListRepository
         'description' => $validatedData['description'] ?? null,
         'is_public' => false,
         User::FOREIGN_KEY => $userID,
-    ])->makeHidden(User::FOREIGN_KEY);
+    ]);
 
     $this->flushUserTierListInfoCache($tierList->user_id);
 
-    // TODO: if public, refresh recent
+    if ($tierList->is_public) {
+      $this->flushAllPublicCache();
+    }
 
     return $tierList;
   }
@@ -75,8 +85,10 @@ class TierListRepository
 
     $this->flushUserTierListInfoCache($tierList->user_id);
     $this->flushTierListCacheByID($tierList->id);
-    if ($tierList->is_public) {
-      Cache::tags([static::ALL_CACHE])->forget(static::RECENT_CACHE);
+
+    $isUpdatingIsPublicField = array_key_exists('is_public', $validatedData);
+    if ($tierList->is_public || $isUpdatingIsPublicField) {
+      $this->flushAllPublicCache();
     }
 
     return $tierList;
@@ -84,7 +96,7 @@ class TierListRepository
 
   public function recent(): Collection
   {
-    return Cache::tags([static::ALL_CACHE])->rememberForever(
+    return Cache::tags([static::ALL_CACHE, static::PUBLIC_CACHE])->rememberForever(
       key: static::RECENT_CACHE,
       callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', Model::CREATED_AT, User::FOREIGN_KEY)
         ->whereIsPublic()
@@ -92,7 +104,6 @@ class TierListRepository
         ->with('creator:id,username')
         ->take(4)
         ->get()
-        ->makeHidden(User::FOREIGN_KEY)
     );
   }
 
@@ -107,7 +118,7 @@ class TierListRepository
 
     // if public flush index & recent
     if ($tierList->is_public) {
-      Cache::tags([static::ALL_CACHE])->forget(static::RECENT_CACHE);
+      $this->flushAllPublicCache();
     }
 
   }
@@ -120,5 +131,10 @@ class TierListRepository
   public function flushTierListCacheByID(string $tierListID)
   {
     Cache::tags([static::ALL_CACHE])->forget($tierListID);
+  }
+
+  public function flushAllPublicCache()
+  {
+    Cache::tags([static::PUBLIC_CACHE])->flush();
   }
 }
