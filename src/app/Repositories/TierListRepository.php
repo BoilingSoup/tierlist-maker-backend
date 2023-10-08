@@ -35,7 +35,9 @@ const INDEX_CACHE = 'TLR_I';
     return Cache::tags([static::ALL_CACHE, static::PUBLIC_CACHE])->rememberForever(
       key: static::INDEX_CACHE,
       callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', Model::CREATED_AT, Model::UPDATED_AT, User::FOREIGN_KEY)
-        ->where('is_public', true)->cursorPaginate(perPage: 12)
+        ->whereIsPublic()
+        ->orderByRecency()
+        ->cursorPaginate(perPage: 12)
     );
   }
 
@@ -52,7 +54,9 @@ const INDEX_CACHE = 'TLR_I';
     return Cache::tags([static::ALL_CACHE, $userID])->rememberForever(
       key: $userID.$cursor,
       callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', 'is_public', Model::CREATED_AT, Model::UPDATED_AT, User::FOREIGN_KEY)
-        ->where(User::FOREIGN_KEY, $userID)->cursorPaginate(perPage: 12)
+        ->where(User::FOREIGN_KEY, $userID)
+        ->orderByRecency()
+        ->cursorPaginate(perPage: 12)
     );
   }
 
@@ -63,9 +67,9 @@ const INDEX_CACHE = 'TLR_I';
     $tierList = TierList::create([
         'title' => $validatedData['title'] ?? 'Untitled - '.now()->toDateTimeString(),
         'data' => json_encode($validatedData['data']),
-        'thumbnail' => $validatedData['thumbnail'] ?? 'dummy',
+        'thumbnail' => $validatedData['thumbnail'],
         'description' => $validatedData['description'] ?? null,
-        'is_public' => false,
+        'is_public' => $validatedData['is_public'],
         User::FOREIGN_KEY => $userID,
     ]);
 

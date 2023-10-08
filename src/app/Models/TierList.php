@@ -38,7 +38,7 @@ class TierList extends Model
 
     public function scopeOrderByRecency(Builder $builder): Builder
     {
-        return $builder->orderBy(Model::CREATED_AT, 'desc');
+        return $builder->orderBy(Model::UPDATED_AT, 'desc');
     }
 
     public function scopeWhereIsPublic(Builder $builder): Builder
