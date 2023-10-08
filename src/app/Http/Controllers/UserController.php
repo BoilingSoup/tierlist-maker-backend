@@ -8,16 +8,25 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Services\DataHandlerService;
+use App\Services\ImageManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
   public UserRepository $repository;
 
-  public function __construct(UserRepository $repository)
+  public DataHandlerService $dataHandlerService;
+
+  public ImageManagementService $imageManagementService;
+
+  public function __construct(UserRepository $repository, DataHandlerService $dataHandlerService, ImageManagementService $imageManagementService)
   {
     $this->repository = $repository;
+    $this->dataHandlerService = $dataHandlerService;
+    $this->imageManagementService = $imageManagementService;
   }
 
   /**
@@ -81,8 +90,16 @@ class UserController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy()
   {
-    //
+    $user = Auth::user();
+
+    $this->dataHandlerService->deleteAllTierListsInBatches(user: $user, batchSize: 5);
+
+    User::destroy($user->id);
+
+    Cache::flush();
+
+    response()->noContent();
   }
 }

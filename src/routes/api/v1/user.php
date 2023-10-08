@@ -9,4 +9,6 @@ Route::name('v1.user.')->group(function () {
   Route::patch('/user', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verified'])->name('update');
 
   Route::patch('/user/change-password', [UserController::class, 'changePassword'])->middleware(['auth:sanctum', 'verified'])->name('changePassword');
+
+  Route::delete('/user', [UserController::class, 'destroy'])->middleware(['auth:sanctum'])->name('destroy');
 });
