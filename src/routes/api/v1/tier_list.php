@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('v1.tierlist.')->group(function () {
 
+  Route::get('/tierlist/', [TierListController::class, 'index'])->name('index');
+
   Route::get('/tierlist/recent', [TierListController::class, 'recent'])->name('recent');
 
   Route::get('/tierlist/{uuid}', [TierListController::class, 'show'])->whereUuid('uuid')->name('show');

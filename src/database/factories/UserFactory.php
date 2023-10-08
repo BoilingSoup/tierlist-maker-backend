@@ -91,4 +91,16 @@ class UserFactory extends Factory
         'discord_id' => 1111,
     ]);
   }
+
+  public function bobby()
+  {
+    return $this->state([
+        'username' => 'bobby',
+        'email' => 'bobby@bobby.com',
+        'email_verified_at' => now(),
+        'password' => Hash::make('password'),
+        'is_admin' => false,
+        'remember_token' => Str::random(10),
+    ]);
+  }
 }

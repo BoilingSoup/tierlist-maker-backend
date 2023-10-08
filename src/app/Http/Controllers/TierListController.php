@@ -33,7 +33,7 @@ class TierListController extends Controller
      */
     public function index()
     {
-    //
+      return $this->repository->index();
     }
 
     /**
