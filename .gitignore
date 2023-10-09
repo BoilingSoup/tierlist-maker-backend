@@ -1,3 +1,6 @@
 .docker/nginx/.logs/access.log
 .docker/nginx/.logs/error.log
 .docker/php/.logs/php_errors.log
+.docker/prod/
+src/conf/*
+src/scripts/*
