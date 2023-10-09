@@ -22,7 +22,7 @@ class TierListRepository
 
   const RECENT_CACHE = 'TLR_R';
 
-const INDEX_CACHE = 'TLR_I';
+  const INDEX_CACHE = 'TLR_I';
 
   public ImageManagementService $imageManagementService;
 
@@ -103,7 +103,7 @@ const INDEX_CACHE = 'TLR_I';
   {
     return Cache::tags([static::ALL_CACHE, static::PUBLIC_CACHE])->rememberForever(
       key: static::RECENT_CACHE,
-      callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', Model::CREATED_AT, User::FOREIGN_KEY)
+      callback: fn () => TierList::select('id', 'title', 'description', 'thumbnail', Model::UPDATED_AT, User::FOREIGN_KEY)
         ->whereIsPublic()
         ->orderByRecency()
         ->with('creator:id,username')
@@ -114,14 +114,11 @@ const INDEX_CACHE = 'TLR_I';
 
   public function destroy(TierList $tierList)
   {
-    // NOTE: when a user clones a public tierlist, they must reupload the images to cloudinary for consistency.
     TierList::destroy($tierList->id);
 
-    // always flush user, and individual GET id
     $this->flushUserTierListInfoCache($tierList->user_id);
     $this->flushTierListCacheByID($tierList->id);
 
-    // if public flush index & recent
     if ($tierList->is_public) {
       $this->flushAllPublicCache();
     }
