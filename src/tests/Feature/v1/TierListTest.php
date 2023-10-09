@@ -28,7 +28,7 @@ class TierListTest extends TestCase
             'title',
             'description',
             'thumbnail',
-            Model::CREATED_AT,
+            Model::UPDATED_AT,
             'creator' => [
                 'id',
                 'username',
