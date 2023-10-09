@@ -6,10 +6,10 @@ use Cache;
 
 trait ManageCache
 {
-  public function clearDependentCacheKeys(array $cacheKeys)
+  public function clearDependentCacheTags(array $cacheTags)
   {
-    foreach ($cacheKeys as $key) {
-      Cache::forget($key);
+    foreach ($cacheTags as $tags) {
+      Cache::tags([$tags])->flush();
     }
   }
 }

@@ -71,6 +71,7 @@ class UserController extends Controller
     }
 
     $user = $this->repository->update($validated);
+    //
 
     return new UserResource($user);
   }

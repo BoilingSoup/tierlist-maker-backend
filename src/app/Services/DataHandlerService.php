@@ -106,7 +106,7 @@ class DataHandlerService
     return $allIDs;
   }
 
-  public function deleteAllTierListsInBatches(Authenticatable $user, int $batchSize = 5)
+  public function deleteAllTierListsInBatches(Authenticatable $user, int $batchSize = 5): void
   {
     $batch = $this->tierListRepository->getBatch(user: $user, batchSize: $batchSize);
 
@@ -124,18 +124,20 @@ class DataHandlerService
       $allIDs = [];
 
       $collection->each(function (TierList $tierList) use ($dataHandler, $imageManager, &$allIDs) {
-        $allTierListImagesIDs = $dataHandler->getAllImageIDs($tierList, true);
+        $allTierListImagesIDs = $dataHandler->getAllImageIDs($tierList, includeThumbnailID: true);
         $imageManager->deleteImages($allTierListImagesIDs);
 
-        unset($allTierListImagesIDs); // try to free some memory
+        unset($allTierListImagesIDs); // try to free memory
 
         array_push($allIDs, $tierList->id);
+
+        unset($tierList); // try to free memory
       });
-      unset($collection); // try to free some memory
+      unset($collection); // try to free memory
 
       $tierListRepository->destroyAll($allIDs, flushCache: false);
 
-      unset($allIDs); // try to free some memory
+      unset($allIDs); // try to free memory
 
       $batch = $tierListRepository->getBatch(user: $user, batchSize: $batchSize);
 

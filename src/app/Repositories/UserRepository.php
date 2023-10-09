@@ -21,7 +21,7 @@ class UserRepository
     if (array_key_first($body) === 'username') {
       Auth::user()->username = $body['username'];
       Auth::user()->saveOrFail();
-      $this->clearDependentCacheKeys([TierListRepository::RECENT_CACHE]);
+      $this->clearDependentCacheTags([TierListRepository::PUBLIC_CACHE]);
     }
 
     $isOauth = (bool) Auth::user()->getOAuthProvider();
