@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Ramsey\Uuid\Uuid;
 
 Route::get('/google/redirect', function () {
     return Socialite::driver('google')->redirect();
@@ -16,7 +17,7 @@ Route::get('/google/callback', function () {
         $user = User::updateOrCreate(
             ['google_id' => $googleUser->id],
             [
-                'username' => $googleUser->nickname ?? $googleUser->name, // TODO: make uuid if both are null
+                'username' => $googleUser->nickname ?? $googleUser->name ?? Uuid::uuid4(),
                 'email' => $googleUser->email,
                 'email_verified_at' => date('Y-m-d H:i:s'),
                 'google_token' => $googleUser->token,
