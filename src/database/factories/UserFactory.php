@@ -103,4 +103,16 @@ class UserFactory extends Factory
         'remember_token' => Str::random(10),
     ]);
   }
+
+  public function atMachineDiscord()
+  {
+    return $this->state([
+        'username' => '@machine_discord',
+        'email' => 'machine@machine.com',
+        'email_verified_at' => now(),
+        'password' => Hash::make('password'),
+        'is_admin' => false,
+        'remember_token' => Str::random(10),
+    ]);
+  }
 }

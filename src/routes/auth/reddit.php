@@ -4,6 +4,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Ramsey\Uuid\Uuid;
 
 Route::get('/reddit/redirect', function () {
     return Socialite::driver('reddit')->redirect();
@@ -16,7 +17,7 @@ Route::get('/reddit/callback', function () {
         $user = User::updateOrCreate(
             ['reddit_id' => $redditUser->id],
             [
-                'username' => $redditUser->nickname ?? $redditUser->name, // TODO: make uuid if both are null
+                'username' => $redditUser->nickname ?? $redditUser->name ?? Uuid::uuid4(),
                 'email' => $redditUser->email,
                 'email_verified_at' => date('Y-m-d H:i:s'),
                 'reddit_token' => $redditUser->token,
